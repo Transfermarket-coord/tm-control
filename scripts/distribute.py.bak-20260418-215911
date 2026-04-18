@@ -28,6 +28,7 @@ FAIL MODES:
   - No active accounts → exit 3
   - GB1 pinned to non-active id → exit 4
 """
+from __future__ import annotations
 
 import hashlib
 import json
@@ -95,7 +96,7 @@ def hash_to_active(comp_id: str, active_ids: List[int]) -> int:
     return active_ids[h % len(active_ids)]
 
 
-def load_workers(config_path: Path) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+def load_workers(config_path: Path) -> Tuple[List[Dict[str, Any]], Dict[str, int]]:
     """Returns (accounts, tier_1_pins). Exits on bad config."""
     if not config_path.exists():
         print(f"ERROR: {config_path} not found", file=sys.stderr)
@@ -118,42 +119,15 @@ def get_active_ids(accounts: List[Dict[str, Any]]) -> List[int]:
     return active
 
 
-PIN_SKIP_STATUSES = {"quota_paused", "disabled"}
-
-
-def resolve_pin(pin, accounts_by_id):
-    """Walk pin chain (int or list); return first id whose status is NOT
-    in {quota_paused, disabled}. Returns None if chain exhausted."""
-    chain = pin if isinstance(pin, list) else [pin]
-    for aid in chain:
-        acc = accounts_by_id.get(aid)
-        if acc and acc.get("status") not in PIN_SKIP_STATUSES:
-            return aid
-    return None
-
-
-def validate_tier_1_pins(tier_1_pins, accounts):
-    """Ensure every pin chain entry references a known account.
-    Warn if entire chain resolves to None (falls back to hash)."""
-    accounts_by_id = {a["id"]: a for a in accounts}
-    known_ids = set(accounts_by_id.keys())
-
-    for comp_id, pin in tier_1_pins.items():
-        chain = pin if isinstance(pin, list) else [pin]
-        for aid in chain:
-            if aid not in known_ids:
-                print(
-                    f"ERROR: tier_1_pin {comp_id} references unknown id:{aid} "
-                    f"(known = {sorted(known_ids)})",
-                    file=sys.stderr,
-                )
-                sys.exit(4)
-        if resolve_pin(pin, accounts_by_id) is None:
+def validate_tier_1_pins(tier_1_pins: Dict[str, int], active_ids: List[int]) -> None:
+    for comp_id, pinned_id in tier_1_pins.items():
+        if pinned_id not in active_ids:
             print(
-                f"WARNING: tier_1_pin {comp_id} chain {chain} — all entries "
-                f"are quota_paused or disabled; {comp_id} will be hash-assigned",
+                f"ERROR: tier_1_pin {comp_id} → id:{pinned_id} is not active "
+                f"(active = {active_ids})",
                 file=sys.stderr,
             )
+            sys.exit(4)
 
 
 def normalize_competition(raw: Dict[str, Any]) -> Optional[Dict[str, Any]]:
@@ -174,7 +148,7 @@ def normalize_competition(raw: Dict[str, Any]) -> Optional[Dict[str, Any]]:
 def distribute(
     competitions: List[Dict[str, Any]],
     active_ids: List[int],
-    tier_1_pins: Dict[str, Any],
+    tier_1_pins: Dict[str, int],
 ) -> Dict[str, List[str]]:
     """Returns {account_id_str: [comp_id, ...]} assignments."""
     assignments: Dict[str, List[str]] = {str(aid): [] for aid in active_ids}
@@ -186,15 +160,9 @@ def distribute(
             continue
         seen_comps.add(cid)
 
-        # Tier-1 pin overrides hash (chain-aware, v4)
+        # Tier-1 pin overrides hash
         if cid in tier_1_pins:
-            # Minimal accounts_by_id: we only know active status here, so
-            # skipped entries resolve as None -> fall back to hash.
-            # check_quotas.py has already filtered quota_paused from active_ids.
-            accounts_by_id = {aid: {"id": aid, "status": "active"} for aid in active_ids}
-            target = resolve_pin(tier_1_pins[cid], accounts_by_id)
-            if target is None:
-                target = hash_to_active(cid, active_ids)
+            target = tier_1_pins[cid]
         else:
             target = hash_to_active(cid, active_ids)
 
@@ -210,7 +178,7 @@ def distribute(
 def build_meta(
     accounts: List[Dict[str, Any]],
     active_ids: List[int],
-    tier_1_pins: Dict[str, Any],
+    tier_1_pins: Dict[str, int],
     competitions: List[Dict[str, Any]],
     assignments: Dict[str, List[str]],
 ) -> Dict[str, Any]:
@@ -265,7 +233,7 @@ def main() -> int:
 
     accounts, tier_1_pins = load_workers(Path(args.config))
     active_ids = get_active_ids(accounts)
-    validate_tier_1_pins(tier_1_pins, accounts)
+    validate_tier_1_pins(tier_1_pins, active_ids)
 
     if args.from_file:
         comps: List[Dict[str, Any]] = []
