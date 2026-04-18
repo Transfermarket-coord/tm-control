@@ -55,7 +55,8 @@ with open('${COMPS_JSONL}') as f:
         if not line: continue
         try: obj = json.loads(line)
         except: continue
-        if obj.get('comp_id') == '${COMP}':
+        last = obj.get('href','').strip('/').split('/')[-1] if obj.get('href') else ''
+        if last.upper() == '${COMP}'.upper():
             print(line); sys.exit(0)
 sys.exit(1)
 ")
