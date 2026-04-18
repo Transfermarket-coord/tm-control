@@ -1,5 +1,5 @@
 # Public-safe subset of Servarica's tm_accounts.yml.
-# Generated: 2026-04-18T20:21:55Z
+# Generated: 2026-04-18T22:06:19Z
 # DO NOT EDIT — overwritten on every Servarica push.
 
 accounts:
@@ -48,7 +48,7 @@ accounts:
   id: 9
   repo_name: TM9
   status: backup
-- github_user: Transfermarket-coord
+- github_user: arifin971
   host_alias: github-tm-10
   id: 10
   repo_name: TM10
@@ -90,4 +90,7 @@ seasons:
   old_tier_count: 10
   recent_tier_count: 5
 tier_1_pins:
-  GB1: 1
+  GB1:
+  - 14
+  - 9
+  - 10
