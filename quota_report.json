@@ -1,0 +1,119 @@
+{
+  "generated_at": "2026-04-18T16:56:05+00:00",
+  "limit_minutes": 2000,
+  "pause_threshold": 0.9,
+  "accounts": [
+    {
+      "id": 1,
+      "github_user": "rezafpl2020-tech",
+      "repo_name": "TM1",
+      "original_status": "active",
+      "minutes_used": 0,
+      "usage_pct": 0.0,
+      "status_reachable": false,
+      "quota_paused": false,
+      "checked_at": "2026-04-18T16:56:04+00:00"
+    },
+    {
+      "id": 2,
+      "github_user": "playfantasy365",
+      "repo_name": "TM2",
+      "original_status": "active",
+      "minutes_used": 0,
+      "usage_pct": 0.0,
+      "status_reachable": false,
+      "quota_paused": false,
+      "checked_at": "2026-04-18T16:56:04+00:00"
+    },
+    {
+      "id": 3,
+      "github_user": "xmandubai01",
+      "repo_name": "TM3",
+      "original_status": "active",
+      "minutes_used": 0,
+      "usage_pct": 0.0,
+      "status_reachable": false,
+      "quota_paused": false,
+      "checked_at": "2026-04-18T16:56:04+00:00"
+    },
+    {
+      "id": 4,
+      "github_user": "chelseareservetop11-tech",
+      "repo_name": "TM4",
+      "original_status": "active",
+      "minutes_used": 0,
+      "usage_pct": 0.0,
+      "status_reachable": false,
+      "quota_paused": false,
+      "checked_at": "2026-04-18T16:56:05+00:00"
+    },
+    {
+      "id": 5,
+      "github_user": "khaldrog971-tech",
+      "repo_name": "TM5",
+      "original_status": "active",
+      "minutes_used": 0,
+      "usage_pct": 0.0,
+      "status_reachable": false,
+      "quota_paused": false,
+      "checked_at": "2026-04-18T16:56:05+00:00"
+    },
+    {
+      "id": 6,
+      "github_user": "adamthestones-tech",
+      "repo_name": "TM6",
+      "original_status": "active",
+      "minutes_used": 0,
+      "usage_pct": 0.0,
+      "status_reachable": false,
+      "quota_paused": false,
+      "checked_at": "2026-04-18T16:56:05+00:00"
+    },
+    {
+      "id": 7,
+      "github_user": "arifinucb-tech",
+      "repo_name": "TM7",
+      "original_status": "active",
+      "minutes_used": 0,
+      "usage_pct": 0.0,
+      "status_reachable": false,
+      "quota_paused": false,
+      "checked_at": "2026-04-18T16:56:05+00:00"
+    },
+    {
+      "id": 8,
+      "github_user": "arifincoursera-tech",
+      "repo_name": "TM8",
+      "original_status": "active",
+      "minutes_used": 0,
+      "usage_pct": 0.0,
+      "status_reachable": false,
+      "quota_paused": false,
+      "checked_at": "2026-04-18T16:56:05+00:00"
+    },
+    {
+      "id": 9,
+      "github_user": "sportinerd-byte",
+      "repo_name": "TM9",
+      "original_status": "backup",
+      "minutes_used": 0,
+      "usage_pct": 0.0,
+      "status_reachable": false,
+      "quota_paused": false,
+      "checked_at": "2026-04-18T16:56:05+00:00"
+    },
+    {
+      "id": 10,
+      "github_user": "arifin971",
+      "repo_name": "TM10",
+      "original_status": "backup",
+      "minutes_used": 0,
+      "usage_pct": 0.0,
+      "status_reachable": false,
+      "quota_paused": false,
+      "checked_at": "2026-04-18T16:56:05+00:00"
+    }
+  ],
+  "paused_count": 0,
+  "promoted_count": 0
+}
