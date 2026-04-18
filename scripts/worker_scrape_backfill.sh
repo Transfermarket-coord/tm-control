@@ -107,9 +107,9 @@ sys.exit(1)
                     CONSECUTIVE_FAILS=0
                 else
                     rm -f "${OUT_DIR}/games.jsonl.tmp"
-                    tail -3 "${OUT_DIR}/games.stderr.log" 2>/dev/null | sed 's/^/    /'
-                    CONSECUTIVE_FAILS=$((CONSECUTIVE_FAILS+1))
-                    TOTAL_FAILS=$((TOTAL_FAILS+1))
+                    rm -f "${OUT_DIR}/games.stderr.log"
+                    echo "    empty (dcaribou OK but 0 rows — no season data)"
+                    CONSECUTIVE_FAILS=0
                 fi
             else
                 tail -3 "${OUT_DIR}/games.stderr.log" 2>/dev/null | sed 's/^/    /'
