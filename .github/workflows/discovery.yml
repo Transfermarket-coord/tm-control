@@ -1,0 +1,107 @@
+name: Weekly Discovery
+
+# Runs Saturday 23:00 UTC on arifin971/tm-control.
+# Steps:
+#   1. Check each worker's status.json (quota usage → promote backups if needed)
+#   2. Scrape TM's competition master list (dcaribou confederations | competitions)
+#   3. Run distribute.py → assignments.json
+#   4. Regenerate backfill_schedule.json (only if doesn't exist or config changed)
+#   5. Commit + push to main (publicly readable by workers via raw.githubusercontent)
+
+on:
+  schedule:
+    - cron: '0 23 * * 6'   # Saturday 23:00 UTC
+  workflow_dispatch:
+    inputs:
+      force_regenerate_backfill:
+        description: 'Regenerate seasons/backfill_schedule.json from scratch'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['false', 'true']
+
+concurrency:
+  group: discovery
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      DCARIBOU_IMAGE:      dcaribou/transfermarkt-scraper:main
+      PYTHONUNBUFFERED:    '1'
+      FORCE_BACKFILL:      ${{ github.event.inputs.force_regenerate_backfill || 'false' }}
+
+    steps:
+      - name: Checkout tm-control
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python deps
+        run: pip install pyyaml
+
+      - name: Pull dcaribou scraper image
+        run: docker pull "$DCARIBOU_IMAGE"
+
+      # ── Step 1 ── Quota check BEFORE distribution ──
+      - name: Check worker quotas
+        run: |
+          python scripts/check_quotas.py \
+            --input  config/workers.yml \
+            --output config/workers-effective.yml \
+            --report quota_report.json
+
+      # ── Step 2 ── Scrape TM competitions master list ──
+      - name: Discover active competitions
+        run: |
+          set -eo pipefail
+          docker run --rm "$DCARIBOU_IMAGE" \
+            python -m tfmkt confederations \
+          | docker run --rm -i "$DCARIBOU_IMAGE" \
+              python -m tfmkt competitions \
+          > competitions_raw.jsonl
+          wc -l competitions_raw.jsonl
+
+      # ── Step 3 ── Build assignments.json from effective (quota-adjusted) config ──
+      - name: Generate assignments
+        run: |
+          python scripts/distribute.py \
+            --config    config/workers-effective.yml \
+            --output    assignments.json \
+            --from-file competitions_raw.jsonl
+
+      # ── Step 4 ── Backfill schedule — only regenerate if missing or forced ──
+      - name: Ensure backfill schedule exists
+        run: |
+          if [[ "$FORCE_BACKFILL" == "true" ]] || [[ ! -f seasons/backfill_schedule.json ]]; then
+            python scripts/generate_backfill_schedule.py \
+              --config config/workers.yml \
+              --output seasons/backfill_schedule.json
+          else
+            echo "Existing seasons/backfill_schedule.json preserved (force=$FORCE_BACKFILL)"
+          fi
+
+      # ── Step 5 ── Commit all changes atomically ──
+      - name: Commit artifacts
+        run: |
+          git config user.name  "tm-control-bot"
+          git config user.email "tm-control-bot@users.noreply.github.com"
+          git add assignments.json quota_report.json seasons/backfill_schedule.json || true
+          # Never commit workers-effective.yml (transient, may contain quota_paused)
+          rm -f config/workers-effective.yml competitions_raw.jsonl
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            TIMESTAMP=$(date -u +%Y-%m-%dT%H:%MZ)
+            git commit -m "weekly: assignments + quota [$TIMESTAMP]"
+            git push
+          fi

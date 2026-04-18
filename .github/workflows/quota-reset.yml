@@ -1,0 +1,42 @@
+name: Monthly Quota Reset
+
+# Runs 1st of each month at 00:00 UTC.
+# GitHub Actions free-tier quotas reset on the 1st; this workflow clears
+# the quota_paused statuses so the next discovery run promotes previously
+# paused workers back into rotation.
+
+on:
+  schedule:
+    - cron: '0 0 1 * *'    # 00:00 UTC on the 1st
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  reset:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout tm-control
+        uses: actions/checkout@v4
+
+      - name: Clear quota_paused flag from previous quota_report.json
+        run: |
+          # The quota_paused determination is computed fresh every Saturday
+          # from each worker's status.json. But status.json may still carry
+          # stale usage from last month. Announce the reset so workers know
+          # to zero their own counters on next run.
+          cat > quota_reset_marker.json <<EOF
+          {
+            "reset_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "month_start": "$(date -u +%Y-%m-01)",
+            "message": "Workers: zero minutes_used_this_month on next run."
+          }
+          EOF
+          git config user.name  "tm-control-bot"
+          git config user.email "tm-control-bot@users.noreply.github.com"
+          git add quota_reset_marker.json
+          git commit -m "monthly: quota reset marker $(date -u +%Y-%m)" || echo "no-op"
+          git push || echo "no-op push"
