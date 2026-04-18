@@ -95,9 +95,9 @@ jobs:
         run: |
           git config user.name  "tm-control-bot"
           git config user.email "tm-control-bot@users.noreply.github.com"
-          git add assignments.json quota_report.json seasons/backfill_schedule.json || true
+          git add assignments.json quota_report.json seasons/backfill_schedule.json competitions_raw.jsonl || true
           # Never commit workers-effective.yml (transient, may contain quota_paused)
-          rm -f config/workers-effective.yml competitions_raw.jsonl
+          rm -f config/workers-effective.yml
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
