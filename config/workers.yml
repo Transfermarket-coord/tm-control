@@ -1,0 +1,73 @@
+# Public-safe subset of Servarica's tm_accounts.yml.
+# Generated: 2026-04-18T16:48:50Z
+# DO NOT EDIT — overwritten on every Servarica push.
+
+accounts:
+- github_user: rezafpl2020-tech
+  host_alias: github-tm-1
+  id: 1
+  repo_name: TM1
+  status: active
+- github_user: playfantasy365
+  host_alias: github-tm-2
+  id: 2
+  repo_name: TM2
+  status: active
+- github_user: xmandubai01
+  host_alias: github-tm-3
+  id: 3
+  repo_name: TM3
+  status: active
+- github_user: chelseareservetop11-tech
+  host_alias: github-tm-4
+  id: 4
+  repo_name: TM4
+  status: active
+- github_user: khaldrog971-tech
+  host_alias: github-tm-5
+  id: 5
+  repo_name: TM5
+  status: active
+- github_user: adamthestones-tech
+  host_alias: github-tm-6
+  id: 6
+  repo_name: TM6
+  status: active
+- github_user: arifinucb-tech
+  host_alias: github-tm-7
+  id: 7
+  repo_name: TM7
+  status: active
+- github_user: arifincoursera-tech
+  host_alias: github-tm-8
+  id: 8
+  repo_name: TM8
+  status: active
+- github_user: sportinerd-byte
+  host_alias: github-tm-9
+  id: 9
+  repo_name: TM9
+  status: backup
+- github_user: arifin971
+  host_alias: github-tm-10
+  id: 10
+  repo_name: TM10
+  status: backup
+control_plane:
+  branch: main
+  github_user: arifin971
+  host_alias: github-tm-control
+  repo_name: tm-control
+quota:
+  estimate_per_run: 45
+  limit_minutes: 2000
+  pause_threshold: 0.9
+seasons:
+  backfill_from: 2000
+  backfill_to: 2024
+  current: 2025
+  mid_tier_count: 10
+  old_tier_count: 10
+  recent_tier_count: 5
+tier_1_pins:
+  GB1: 1
