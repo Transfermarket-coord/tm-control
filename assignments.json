@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-19T00:06:11+00:00",
+  "generated_at": "2026-04-26T06:23:19+00:00",
   "active_ids": [
     1,
     2,
@@ -27,21 +27,21 @@
       10
     ]
   },
-  "total_competitions": 495,
+  "total_competitions": 496,
   "by_tier": {
     "1": 1,
     "2": 2,
-    "3": 492
+    "3": 493
   },
   "competitions_per_account": {
     "1": 47,
     "2": 40,
     "3": 43,
     "4": 40,
-    "5": 34,
+    "5": 36,
     "6": 43,
     "7": 36,
-    "8": 34,
+    "8": 33,
     "11": 59,
     "12": 34,
     "13": 41,
@@ -247,12 +247,14 @@
       "ISR2",
       "KSC1",
       "LTSC",
+      "MARP",
       "MNE2",
       "NLSC",
       "NOPO",
       "SC2",
       "SINP",
       "SLO1",
+      "SRL1",
       "UA3L",
       "UAE1",
       "UASC",
@@ -375,7 +377,6 @@
       "RUSS",
       "SEC",
       "SFA",
-      "SIN2",
       "TR2",
       "TSP",
       "USC",
