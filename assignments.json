@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-24T08:07:20+00:00",
+  "generated_at": "2026-05-31T00:04:03+00:00",
   "active_ids": [
     1,
     2,
@@ -27,16 +27,16 @@
       10
     ]
   },
-  "total_competitions": 510,
+  "total_competitions": 511,
   "by_tier": {
     "1": 1,
     "2": 2,
-    "3": 507
+    "3": 508
   },
   "competitions_per_account": {
     "1": 50,
     "2": 40,
-    "3": 44,
+    "3": 45,
     "4": 41,
     "5": 38,
     "6": 44,
@@ -153,6 +153,7 @@
       "AND1",
       "AND2",
       "ARM2",
+      "AU2C",
       "BRA1",
       "BU2",
       "C20Q",
