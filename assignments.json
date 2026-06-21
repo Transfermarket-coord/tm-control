@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-14T00:11:19+00:00",
+  "generated_at": "2026-06-21T00:11:13+00:00",
   "active_ids": [
     1,
     2,
@@ -27,16 +27,16 @@
       10
     ]
   },
-  "total_competitions": 515,
+  "total_competitions": 516,
   "by_tier": {
     "1": 1,
     "2": 2,
-    "3": 512
+    "3": 513
   },
   "competitions_per_account": {
     "1": 52,
     "2": 40,
-    "3": 45,
+    "3": 46,
     "4": 42,
     "5": 38,
     "6": 46,
@@ -187,6 +187,7 @@
       "TADS",
       "TFL2",
       "UNLC",
+      "VEC1",
       "WALE",
       "WMQ1",
       "WRPO"
